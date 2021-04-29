@@ -1,0 +1,30 @@
+type Provider @entity {
+  id: ID!
+  pubkey: BigInt!
+  title: Bytes!
+  endpoints: [Bytes!]
+  endpoint_params: [Bytes!]
+}
+
+type Endpoint @entity {
+  id: ID!
+  oracleTitle: String!
+  provider: String!
+  providerParams: [Bytes!]
+  broker: String!
+  curve: [BigInt!]
+  endpointStr: String!
+  dotsIssued: BigInt!
+  dotLimit: BigInt!
+  costPerDot: BigInt!
+  isToken: Boolean
+  symbol: String
+  tokenAdd: String
+}
+
+type Curve @entity {
+  id: ID!
+  endpoint: Bytes!
+  curve: [BigDecimal!]
+  broker: String!
+}

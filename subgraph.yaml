@@ -1,0 +1,35 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Registry
+    network: mainnet
+    source:
+      address: "0xc7ab7ffc4fc2f3c75ffb621f574d4b9c861330f0"
+      abi: Registry
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Provider
+        - Endpoint
+        - Curve
+      abis:
+        - name: Registry
+          file: ./abis/Registry.json
+        - name: Bondage
+          file: ./abis/Bondage.json
+        - name: TokenDotFactory
+          file: ./abis/TokenDotFactory.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: NewProvider(indexed address,indexed bytes32)
+          handler: handleNewProvider
+        - event: NewCurve(indexed address,indexed bytes32,int256[],indexed address)
+          handler: handleNewCurve
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+      file: ./src/mapping.ts
