@@ -14,3 +14,5 @@ this should create
 generated/schema.ts
 build
 ```
+
+Now you should be all set.

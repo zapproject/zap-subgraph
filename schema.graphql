@@ -12,14 +12,14 @@ type Endpoint @entity {
   provider: String!
   providerParams: [Bytes!]
   broker: String!
-  curve: [BigInt!]
+  # curve: [BigInt!]
   endpointStr: String!
   dotsIssued: BigInt!
-  dotLimit: BigInt!
+  # dotLimit: BigInt!
   costPerDot: BigInt!
-  isToken: Boolean
-  symbol: String
-  tokenAdd: String
+  # isToken: Boolean
+  # symbol: String
+  # tokenAdd: String
 }
 
 type Curve @entity {

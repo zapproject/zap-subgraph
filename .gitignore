@@ -3,3 +3,4 @@ generated/schema.ts
 package-lock.json
 # package.json
 build
+tsconfig.json

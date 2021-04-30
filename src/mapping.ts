@@ -34,34 +34,34 @@ export function handleNewProvider(event: NewProvider): void {
     endpoint.provider = event.params.provider.toString()
     endpoint.providerParams = registry.getAllProviderParams(event.params.provider)
     endpoint.broker = registry.getEndpointBroker(event.params.provider, endpt).toString()
-    let getCurveResult = registry.try_getProviderCurve(event.params.provider, endpt)
-    if (getCurveResult.reverted) {
-      continue
-    } else {
-      endpoint.curve = getCurveResult.value
-    }
+    // let getCurveResult = registry.try_getProviderCurve(event.params.provider, endpt)
+    // if (getCurveResult.reverted) {
+    //   continue
+    // } else {
+    //   endpoint.curve = getCurveResult.value
+    // }
     endpoint.endpointStr = endpt.toString()
     endpoint.dotsIssued = bondage.getDotsIssued(event.params.provider, endpt)
-    let dotLimitResult = bondage.try_dotLimit(event.params.provider, endpt)
-    if (dotLimitResult.reverted) {
-      continue
-    } else {
-      endpoint.dotLimit = dotLimitResult.value
-    }
+    // let dotLimitResult = bondage.try_dotLimit(event.params.provider, endpt)
+    // if (dotLimitResult.reverted) {
+    //   continue
+    // } else {
+    //   endpoint.dotLimit = dotLimitResult.value
+    // }
     endpoint.costPerDot = bondage.calcZapForDots(event.params.provider, endpt, BigInt.fromI32(1))
 
-    let tokenDotFactory = TokenDotFactory.bind(event.params.provider)
-    let tokenAddResult = tokenDotFactory.try_curves(event.params.provider)
-    if (tokenAddResult.reverted) {
-      endpoint.tokenAdd = ""
-      endpoint.isToken = false
-      endpoint.symbol = ""
-    } else {
-      endpoint.tokenAdd = tokenAddResult.value.toString()
-      let token = ERC20.bind(tokenAddResult.value)
-      endpoint.isToken = true
-      endpoint.symbol = token.symbol()
-    }
+    // let tokenDotFactory = TokenDotFactory.bind(event.params.provider)
+    // let tokenAddResult = tokenDotFactory.try_curves(event.params.provider)
+    // if (tokenAddResult.reverted) {
+    //   endpoint.tokenAdd = ""
+    //   endpoint.isToken = false
+    //   endpoint.symbol = ""
+    // } else {
+    //   endpoint.tokenAdd = tokenAddResult.value.toString()
+    //   let token = ERC20.bind(tokenAddResult.value)
+    //   endpoint.isToken = true
+    //   endpoint.symbol = token.symbol()
+    // }
     endpoint.save()
   }
   provider.save()
