@@ -1,5 +1,5 @@
 node_modules
-generated/schema.ts
+generated
 package-lock.json
 # package.json
 build
