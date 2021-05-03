@@ -1,25 +1,37 @@
 type Provider @entity {
-  id: ID!
+  id: ID!  # aka: provider address
   pubkey: BigInt!
   title: Bytes!
-  endpoints: [Bytes!]
-  endpoint_params: [Bytes!]
+  endpoints: [Endpoint!] @derivedFrom(field: "provider")
+  provider_params: [Provider_Param!] @derivedFrom(field: "provider")
+}
+
+type Provider_Param @entity {
+  id: ID!
+  provider: Provider!
+  key: Bytes!
+  value: Bytes
 }
 
 type Endpoint @entity {
   id: ID!
   oracleTitle: String!
-  provider: String!
-  providerParams: [Bytes!]
+  provider: Provider!
   broker: String!
-  # curve: [BigInt!]
+  curve: [BigInt!]
   endpointStr: String!
-  dotsIssued: BigInt!
-  # dotLimit: BigInt!
+  endpointParams: [Bytes!]
+  dotsIssued: BigInt
+  dotLimit: BigInt
   costPerDot: BigInt!
-  # isToken: Boolean
-  # symbol: String
-  # tokenAdd: String
+  zapBound: BigInt
+  isToken: Boolean
+  symbol: String
+  tokenAdd: String
+}
+
+type Factory @entity {
+  id: ID!
 }
 
 type Curve @entity {
