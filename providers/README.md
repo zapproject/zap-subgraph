@@ -4,7 +4,7 @@
 
 Run this command in your terminal:
 ```bash
-cd path/to/subgraph/zap-subgraph/
+cd path/to/subgraph/zap-subgraph/providers
 graph codegen
 ```
 
