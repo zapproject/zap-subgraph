@@ -1,4 +1,4 @@
-import { BigInt, Address } from "@graphprotocol/graph-ts"
+import { BigInt, Address, log } from "@graphprotocol/graph-ts"
 import {
   Registry,
   NewProvider,
@@ -63,8 +63,10 @@ export function handleNewProvider(event: NewProvider): void {
     //   endpoint.symbol = token.symbol()
     // }
     endpoint.save()
+    log.info('Added endpoint {}', [endpoint.oracleTitle])
   }
   provider.save()
+  log.info('Added provider {}', [provider.title.toString()])
 
   // Note: If a handler doesn't require existing field values, it is faster
   // _not_ to load the entity from the store. Instead, create it fresh with
