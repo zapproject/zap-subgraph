@@ -10,10 +10,6 @@ import { Provider, Endpoint, Factory } from "../generated/schema"
 let TDFADDRESS = Address.fromString("0x2416002d127175bc2d627faefdaa4186c7c49833")
 
 // create a new factory entity and save it.
-export function handleDotTokenCreated(event: DotTokenCreated): void {
-  let factory = new Factory(event.params.tokenAddress.toHex())
-  
-  factory.save()
-}
+export function handleDotTokenCreated(event: DotTokenCreated): void {}
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {}

@@ -7,16 +7,16 @@ import {
   SetEndpointParamsCall,
   SetProviderParameterCall
 } from "../generated/Registry/Registry"
-import { Bondage } from "../generated/Bondage/Bondage"
 // import { TokenDotFactory } from "../generated/TokenDotFactory/TokenDotFactory"
 import { ERC20 } from "../generated/ERC20/ERC20"
-import { Provider, Endpoint, Provider_Param, Factory } from "../generated/schema"
+import { Bondage } from "../generated/Bondage/Bondage"
 import { TokenDotFactory } from "../generated/TokenDotFactory/TokenDotFactory"
+import { Provider, Endpoint, Provider_Param } from "../generated/schema"
 
 // Contract Addresses
 let REGADDRESS = Address.fromString("0xc7ab7ffc4fc2f3c75ffb621f574d4b9c861330f0")
 let BONDADDRESS = Address.fromString("0x188f79b0a8edc10ad53285c47c3feaa0d2716e83")
-let TDFADDRESS = Address.fromString("0x2416002d127175bc2d627faefdaa4186c7c49833")
+// let TDFADDRESS = Address.fromString("0x2416002d127175bc2d627faefdaa4186c7c49833")
 
 // Handles a new provider that can either be an Oracle or a Token
 export function handleNewProvider(event: NewProvider): void {
@@ -39,7 +39,7 @@ export function handleNewCurve(event: NewCurve): void {
   let provider = Provider.load(event.params.provider.toHex())
   if (provider == null) return
   // Load the provider's token factory if it exists
-  let factory = Factory.load(provider.id)
+  // let factory = Factory.load(provider.id)
   let endpoint = new Endpoint(event.params.endpoint.toHex())
 
   endpoint.provider = provider.id
@@ -59,35 +59,29 @@ export function handleNewCurve(event: NewCurve): void {
     endpoint.dotLimit = dotLimitResult.value
   }
 
-  if (factory != null) {
-    // connection to the token factory's tdf contract
-    let tdf = TokenDotFactory.bind(Address.fromString(factory.id))
+  let tdf = TokenDotFactory.bind(event.params.provider)
 
-    if (tdf != null) {
-      // try to get the token's address
-      let tokenAddResult = tdf.try_curves(event.params.endpoint)
-      if (tokenAddResult.reverted) {
-        endpoint.tokenAdd = null
-        log.debug("Issue with getting token address for {}", [endpoint.endpointStr])
+  let tokenAddResult = tdf.try_curves(event.params.endpoint)
+  if (tokenAddResult.reverted) {
+    endpoint.tokenAdd = null
+    log.debug("Issue with getting token address for {}", [endpoint.endpointStr])
+  } else {
+    endpoint.tokenAdd = tokenAddResult.value.toString()
+    if (endpoint.tokenAdd != null) {
+      // if the endpoint is a token then get more metadata on it...
+      endpoint.isToken = true
+      // connection to the token's ERC20 contract
+      let token = ERC20.bind(tokenAddResult.value)
+
+      let symbolResult = token.try_symbol()  // try to get the token's symbol
+      if (symbolResult.reverted) {
+        endpoint.symbol = null
+        log.debug("Issue with getting token symbol for {}", [endpoint.endpointStr])
       } else {
-        endpoint.tokenAdd = tokenAddResult.value.toString()
-        if (endpoint.tokenAdd != null) {
-          // if the endpoint is a token then get more metadata on it...
-          endpoint.isToken = true
-          // connection to the token's ERC20 contract
-          let token = ERC20.bind(Address.fromString(endpoint.tokenAdd))
-
-          let symbolResult = token.try_symbol()  // try to get the token's symbol
-          if (symbolResult.reverted) {
-            endpoint.symbol = null
-            log.debug("Issue with getting token symbol for {}", [endpoint.endpointStr])
-          } else {
-            endpoint.symbol = symbolResult.value
-          }
-        } else {
-          endpoint.isToken = false
-        }
+        endpoint.symbol = symbolResult.value
       }
+    } else {
+      endpoint.isToken = false
     }
   }
   // push the new endpoint to the provider's list of endpoints
