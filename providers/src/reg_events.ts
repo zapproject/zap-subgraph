@@ -66,7 +66,7 @@ export function handleNewCurve(event: NewCurve): void {
     endpoint.tokenAdd = null
     log.debug("Issue with getting token address for {}", [endpoint.endpointStr])
   } else {
-    endpoint.tokenAdd = tokenAddResult.value.toString()
+    endpoint.tokenAdd = tokenAddResult.value.toHex()
     if (endpoint.tokenAdd != null) {
       // if the endpoint is a token then get more metadata on it...
       endpoint.isToken = true
