@@ -51,12 +51,6 @@ export function handleBound(event: Bound): void {
   //   // then add it to the array of the user-owned endpoints
   // }
 
-  if ((event.params.holder.toHex() == endpoint.broker) && endpoint.broker != null) {
-    if (!user.owns.includes(endpoint.id)) {
-      user.owns.push(endpoint.id)
-    }
-  }
-
   // updates the number of user-bound dots
   let boundedResult = bondage.try_getBoundDots(event.params.holder, event.params.oracle, event.params.endpoint)
   if (boundedResult.reverted) {
