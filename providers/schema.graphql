@@ -32,8 +32,6 @@ type Endpoint @entity {
 
 type User @entity {
   id: ID!  # user's address
-  # endpoints: [Endpoint!]  # endpoints they're bonded to
-  owns: [Endpoint!]  # endpoints they own
   userBound: [Bond!] @derivedFrom(field: "user")  # info on each bonded endpoint
 }
 
