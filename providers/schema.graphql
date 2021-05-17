@@ -30,8 +30,18 @@ type Endpoint @entity {
   tokenAdd: String
 }
 
-type Factory @entity {
-  id: ID!
+type User @entity {
+  id: ID!  # user's address
+  # endpoints: [Endpoint!]  # endpoints they're bonded to
+  owns: [Endpoint!]  # endpoints they own
+  userBound: [Bond!] @derivedFrom(field: "user")  # info on each bonded endpoint
+}
+
+type Bond @entity {
+  id: ID!  # User.address + endpoint
+  user: User!
+  endpoint: Endpoint
+  bounded: BigInt
 }
 
 type Curve @entity {

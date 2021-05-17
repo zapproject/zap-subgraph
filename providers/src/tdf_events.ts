@@ -4,7 +4,7 @@ import {
   DotTokenCreated,
   OwnershipTransferred
 } from "../generated/TokenDotFactory/TokenDotFactory"
-import { Provider, Endpoint, Factory } from "../generated/schema"
+import { Provider, Endpoint } from "../generated/schema"
 
 // Contract addresses
 let TDFADDRESS = Address.fromString("0x2416002d127175bc2d627faefdaa4186c7c49833")
