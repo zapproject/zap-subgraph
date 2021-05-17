@@ -1,0 +1,101 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Registry
+    network: mainnet
+    source:
+      address: "0xc7ab7ffc4fc2f3c75ffb621f574d4b9c861330f0"
+      abi: Registry
+      startBlock: 7038734
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Provider
+        - Endpoint
+        - Curve
+      abis:
+        - name: Registry
+          file: ./abis/Registry.json
+        - name: Bondage
+          file: ./abis/Bondage.json
+        - name: TokenDotFactory
+          file: ./abis/TokenDotFactory.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: NewProvider(indexed address,indexed bytes32)
+          handler: handleNewProvider
+        - event: NewCurve(indexed address,indexed bytes32,int256[],indexed address)
+          handler: handleNewCurve
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+      callHandlers:
+        - function: setEndpointParams(bytes32,bytes32[])
+          handler: handleSetEndpointParameter
+        - function: setProviderParameter(bytes32,bytes)
+          handler: handleSetProviderParameter
+      file: ./src/reg_events.ts
+  - kind: ethereum/contract
+    name: Bondage
+    network: mainnet
+    source:
+      address: "0x188f79b0a8edc10ad53285c47c3feaa0d2716e83"
+      abi: Bondage
+      startBlock: 6976654
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Bound
+        - Unbound
+        - Escrowed
+        - Released
+        - Returned
+        - OwnershipTransferred
+      abis:
+        - name: Bondage
+          file: ./abis/Bondage.json
+        - name: Registry
+          file: ./abis/Registry.json
+      eventHandlers:
+        - event: Bound(indexed address,indexed address,indexed bytes32,uint256,uint256)
+          handler: handleBound
+        - event: Unbound(indexed address,indexed address,indexed bytes32,uint256)
+          handler: handleUnbound
+        - event: Escrowed(indexed address,indexed address,indexed bytes32,uint256)
+          handler: handleEscrowed
+        - event: Released(indexed address,indexed address,indexed bytes32,uint256)
+          handler: handleReleased
+        - event: Returned(indexed address,indexed address,indexed bytes32,uint256)
+          handler: handleReturned
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+      file: ./src/bond_events.ts
+  - kind: ethereum/contract
+    name: TokenDotFactory
+    network: mainnet
+    source:
+      address: "0x2416002d127175bc2d627faefdaa4186c7c49833"
+      abi: TokenDotFactory
+      startBlock: 7052396
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DotTokenCreated
+        - OwnershipTransferred
+      abis:
+        - name: TokenDotFactory
+          file: ./abis/TokenDotFactory.json
+      eventHandlers:
+        - event: DotTokenCreated(address)
+          handler: handleDotTokenCreated
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+      file: ./src/tdf_events.ts
